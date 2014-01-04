@@ -240,6 +240,8 @@ class APNSService(service.Service):
 
 
 class APNSServer(xmlrpc.XMLRPC):
+  allowedMethods = ('POST', 'GET',)
+  
   def __init__(self):
     self.app_ids = app_ids
     self.use_date_time = True
@@ -250,6 +252,12 @@ class APNSServer(xmlrpc.XMLRPC):
     if app_id not in app_ids:
       raise xmlrpc.Fault(404, 'The app_id specified has not been provisioned.')
     return self.app_ids[app_id]
+  
+  def render_GET(self, timeout=15):
+      """
+      Provide a success response for basic up/down status.
+      """
+      return "success"
   
   def xmlrpc_provision(self, app_id, path_to_cert_or_cert, environment, timeout=15):
     """ Starts an APNSService for the this app_id and keeps it running
