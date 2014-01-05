@@ -143,20 +143,20 @@ def ServerProxy(url, *args, **kwargs):
 class TimeoutTransport(xmlrpclib.Transport):
   def make_connection(self, host):
     if hexversion < 0x02070000:
-        conn = TimeoutHTTP(host)
+        conn = TimeoutHTTPS(host)
         conn.set_timeout(self.timeout)
     else:
-        conn = TimeoutHTTPConnection(host)
+        conn = TimeoutHTTPSConnection(host)
         conn.timeout = self.timeout
     return conn
 
-class TimeoutHTTPConnection(httplib.HTTPConnection):
+class TimeoutHTTPSConnection(httplib.HTTPSConnection):
   def connect(self):
-    httplib.HTTPConnection.connect(self)
+    httplib.HTTPSConnection.connect(self)
     self.sock.settimeout(self.timeout)
   
-class TimeoutHTTP(httplib.HTTP):
-  _connection_class = TimeoutHTTPConnection
+class TimeoutHTTPS(httplib.HTTPS):
+  _connection_class = TimeoutHTTPSConnection
   
   def set_timeout(self, timeout):
     self._conn.timeout = timeout
